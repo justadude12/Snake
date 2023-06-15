@@ -1,4 +1,7 @@
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
@@ -19,13 +22,37 @@ public class GamePanel extends JPanel implements ActionListener {
     boolean running = false;
     Timer timer;
     Random random;
+    JButton restart = new JButton("Start again");
 
     GamePanel() {
         random = new Random();
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        this.setLayout(new GridBagLayout());
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
+        restart.setFont(new Font("Ink Free", Font.BOLD, 40));
+        restart.setVisible(false);
+        restart.setFocusable(false);
+        restart.addActionListener(e -> startAgain());
+        restart.setBorder(new LineBorder(Color.darkGray, 10));
+        this.add(restart, constraints);
+        startGame();
+    }
+
+    public void startAgain() {
+        this.setBackground(Color.black);
+        bodyParts = 6;
+        applesEaten = 0;
+        restart.setFocusable(false);
+        restart.setVisible(false);
+        for (int i = 0; i < bodyParts; i++) {
+            x[i] = 0;
+            y[i] = 0;
+        }
+        direction = 'R';
         startGame();
     }
 
@@ -104,6 +131,7 @@ public class GamePanel extends JPanel implements ActionListener {
         for (int i = bodyParts; i > 0; i--) {
             if ((x[0] == x[i]) && (y[0] == y[i])) {
                 running = false;
+                break;
             }
         }
         if (!running) {
@@ -112,13 +140,16 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void gameOver(Graphics g) {
-        g.setColor(Color.red);
+        this.setBackground(Color.white);
+        g.setColor(Color.black);
         g.setFont(new Font("Ink Free", Font.BOLD, 75));
         FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("Game Over", (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
+        g.drawString("Game Over", (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2 - 100);
         g.setFont(new Font("Ink Free", Font.BOLD, 40));
         FontMetrics metrics1 = getFontMetrics(g.getFont());
         g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: " + applesEaten))/2, g.getFont().getSize());
+        restart.setFocusable(true);
+        restart.setVisible(true);
     }
 
     /**
