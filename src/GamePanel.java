@@ -23,23 +23,29 @@ public class GamePanel extends JPanel implements ActionListener {
     Timer timer;
     Random random;
     JButton restart = new JButton("Start again");
+    JButton menu = new JButton("Menu");
 
-    GamePanel() {
+    GamePanel(GameFrame gameFrame) {
         random = new Random();
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         this.setLayout(new GridBagLayout());
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
-        this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
+        this.setVisible(true);
         restart.setFont(new Font("Ink Free", Font.BOLD, 40));
         restart.setVisible(false);
         restart.setFocusable(false);
         restart.addActionListener(e -> startAgain());
         restart.setBorder(new LineBorder(Color.darkGray, 10));
+        menu.setFont(new Font("Ink Free", Font.BOLD, 40));
+        menu.setVisible(false);
+        menu.setFocusable(false);
+        menu.addActionListener(e -> startAgain());
+        menu.setBorder(new LineBorder(Color.darkGray, 10));
         this.add(restart, constraints);
-        startGame();
+        this.add(menu, constraints);
     }
 
     public void startAgain() {
