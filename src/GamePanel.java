@@ -28,7 +28,8 @@ public class GamePanel extends JPanel implements ActionListener {
     GamePanel(GameFrame gameFrame) {
         random = new Random();
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
         this.setLayout(new GridBagLayout());
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
@@ -44,7 +45,17 @@ public class GamePanel extends JPanel implements ActionListener {
         menu.setFocusable(false);
         menu.addActionListener(e -> startAgain());
         menu.setBorder(new LineBorder(Color.darkGray, 10));
+        menu.addActionListener(e -> {
+            menu.setVisible(false);
+            menu.setFocusable(false);
+            restart.setVisible(false);
+            restart.setFocusable(false);
+            gameFrame.cardLayout.show(gameFrame.mainPanel, "menu");
+            gameFrame.menuPanel.requestFocus();
+        });
         this.add(restart, constraints);
+        constraints.gridy++;
+        constraints.insets.top = 5;
         this.add(menu, constraints);
     }
 
@@ -54,6 +65,8 @@ public class GamePanel extends JPanel implements ActionListener {
         applesEaten = 0;
         restart.setFocusable(false);
         restart.setVisible(false);
+        menu.setFocusable(false);
+        menu.setVisible(false);
         for (int i = 0; i < bodyParts; i++) {
             x[i] = 0;
             y[i] = 0;
@@ -65,8 +78,12 @@ public class GamePanel extends JPanel implements ActionListener {
     public void startGame() {
         newApple();
         running = true;
-        timer = new Timer(DELAY, this);
-        timer.start();
+        if(timer != null && timer.getDelay() == DELAY) {
+            timer.restart();
+        } else {
+            timer = new Timer(DELAY, this);
+            timer.start();
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -156,6 +173,8 @@ public class GamePanel extends JPanel implements ActionListener {
         g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: " + applesEaten))/2, g.getFont().getSize());
         restart.setFocusable(true);
         restart.setVisible(true);
+        menu.setFocusable(true);
+        menu.setVisible(true);
     }
 
     /**

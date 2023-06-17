@@ -23,7 +23,7 @@ public class MenuPanel extends JPanel {
         playButton.addActionListener(e -> {
             gameFrame.cardLayout.show(gameFrame.mainPanel, "game");
             gameFrame.gamePanel.requestFocus();
-            gameFrame.gamePanel.startGame();
+            gameFrame.gamePanel.startAgain();
         });
     }
 }
